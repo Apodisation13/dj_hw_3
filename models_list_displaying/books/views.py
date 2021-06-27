@@ -21,13 +21,13 @@ def data_view(request, data):
     # print(sort_data)
     catalog = Book.objects.filter(pub_date=data)
 
+    next_date = Book.objects.filter(pub_date__gt=data).values_list('pub_date').order_by('pub_date').first()
+    if next_date:
+        next_date = next_date[0].strftime("%Y-%m-%d")
 
-    next_date = Book.objects.filter(pub_date__gt=data).\
-        values_list('pub_date').order_by('pub_date').first()[0].strftime("%Y-%m-%d")
-    print(type(next_date))
-    prev_date = Book.objects.filter(pub_date__lt=data).\
-        values_list('pub_date').order_by('-pub_date').first()[0].strftime("%Y-%m-%d")
-    print(prev_date)
+    prev_date = Book.objects.filter(pub_date__lt=data).values_list('pub_date').order_by('-pub_date').first()
+    if prev_date:
+        prev_date = prev_date[0].strftime("%Y-%m-%d")
 
     context = {
         'books': catalog,
